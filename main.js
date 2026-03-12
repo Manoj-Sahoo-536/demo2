@@ -1,4 +1,7 @@
 import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
 const canvas = document.querySelector('canvas#webgl');
 const scene  = new THREE.Scene();
@@ -17,7 +20,8 @@ renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadow
 renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.1;
 
 // Lights
-scene.add(new THREE.HemisphereLight(0xc4e8ff, 0x4a7c40, 0.85));
+const hemiLight = new THREE.HemisphereLight(0xc4e8ff, 0x4a7c40, 0.85);
+scene.add(hemiLight);
 const sun = new THREE.DirectionalLight(0xfff8e0, 2.0);
 sun.position.set(8, 20, 4); sun.castShadow = true;
 sun.shadow.mapSize.set(4096, 4096); sun.shadow.bias = -0.0003;
@@ -109,7 +113,11 @@ for(let i=0;i<pos.count;i++){
   if(d>14) pos.setY(i, Math.sin(x*0.28)*Math.cos(z*0.28)*0.5+Math.sin(x*0.7+z*0.5)*0.25);
 }
 tGeo.computeVertexNormals();
-const ground=new THREE.Mesh(tGeo, new THREE.MeshStandardMaterial({map:grassTex,roughness:1.0}));
+const ground=new THREE.Mesh(tGeo, new THREE.MeshStandardMaterial({
+  map:grassTex,
+  color: 0xffffff,
+  roughness:1.0
+}));
 ground.rotation.x=-Math.PI/2; ground.position.y=-0.18; ground.receiveShadow=true;
 scene.add(ground);
 
@@ -281,6 +289,86 @@ vanGroup.add(wheelsGroup);
 vanGroup.scale.setScalar(0.28);
 scene.add(vanGroup);
 
+// ── Particles (Atmospheric Dust) ───────────────────
+const partGeo = new THREE.BufferGeometry();
+const partCount = 2000;
+const pPos = new Float32Array(partCount * 3);
+for(let i=0; i<partCount*3; i++){
+  pPos[i] = (Math.random() - 0.5) * 60; // Spread over 60 units
+}
+partGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+const partMat = new THREE.PointsMaterial({
+  color: 0x3b82f6,
+  size: 0.08,
+  transparent: true,
+  opacity: 0.6,
+  blending: THREE.AdditiveBlending
+});
+const particles = new THREE.Points(partGeo, partMat);
+particles.position.y = 2;
+scene.add(particles);
+
+// ── Postprocessing ─────────────────────────────────
+const renderScene = new RenderPass(scene, camera);
+const bloomPass = new UnrealBloomPass(new THREE.Vector2(sizes.width, sizes.height), 1.6, 0.4, 0.6);
+const darkBloom = { strength: 0.4, threshold: 1.6 };
+const lightBloom = { strength: 0.15, threshold: 0.9 };
+const composer = new EffectComposer(renderer);
+composer.addPass(renderScene);
+composer.addPass(bloomPass);
+
+// ── Theme Transition Logic ─────────────────────────
+let themeValue = 1;
+let targetThemeValue = 1;
+
+const darkColors = {
+  bg: new THREE.Color('#0b0d17'),
+  fog: new THREE.Color('#0e1224'),
+  hemiSky: new THREE.Color(0x1a2b54),
+  hemiGround: new THREE.Color(0x050a14),
+  sun: new THREE.Color(0x5a8aeb),
+  fill: new THREE.Color(0xf59e0b),
+  ground: new THREE.Color(0x4a5d6e),
+  trunk: new THREE.Color(0x1b1c25),
+  leaf0: new THREE.Color(0x0b241c),
+  leaf1: new THREE.Color(0x091c14),
+  leaf2: new THREE.Color(0x0e2e2a),
+  lampEmissive: new THREE.Color(0x3b82f6),
+  particles: new THREE.Color(0x3b82f6),
+  intensitySun: 1.8,
+  intensityHemi: 0.5,
+  intensityLampMin: 2.0,
+  intensityLampWave: 0.5
+};
+
+const lightColors = {
+  bg: new THREE.Color('#a2d4f0'),
+  fog: new THREE.Color('#b8e2f8'),
+  hemiSky: new THREE.Color(0xc4e8ff),
+  hemiGround: new THREE.Color(0x4a7c40),
+  sun: new THREE.Color(0xfff8e0),
+  fill: new THREE.Color(0xd0e8ff),
+  ground: new THREE.Color(0xffffff),
+  trunk: new THREE.Color(0x7a5230),
+  leaf0: new THREE.Color(0x296b1a),
+  leaf1: new THREE.Color(0x1e5c14),
+  leaf2: new THREE.Color(0x358a22),
+  lampEmissive: new THREE.Color(0xfffce0),
+  particles: new THREE.Color(0xffffff),
+  intensitySun: 2.0,
+  intensityHemi: 0.85,
+  intensityLampMin: 0.2, // Lamps mostly off in day
+  intensityLampWave: 0.1
+};
+
+const themeToggle = document.getElementById('themeToggle');
+if(themeToggle) {
+  themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    targetThemeValue = document.body.classList.contains('dark-mode') ? 0 : 1;
+  });
+}
+
 // Scroll
 let scrollProgress=0, smooth=0;
 window.addEventListener('scroll',()=>{
@@ -292,6 +380,7 @@ window.addEventListener('resize',()=>{
   sizes.width=window.innerWidth; sizes.height=window.innerHeight;
   camera.aspect=sizes.width/sizes.height; camera.updateProjectionMatrix();
   renderer.setSize(sizes.width,sizes.height);
+  composer.setSize(sizes.width,sizes.height);
 });
 
 const clock=new THREE.Clock();
@@ -308,18 +397,59 @@ function animate(){
   const tangent=curve.getTangent(t); tangent.y=0; tangent.normalize();
   vanGroup.position.set(point.x, isDriving?Math.sin(time*14)*0.005:0, point.z);
   vanGroup.quaternion.setFromUnitVectors(_fwd,tangent);
-  lampGlowM.emissiveIntensity=0.85+0.1*Math.sin(time*1.5);
+  
+  // Theme Transition Animation
+  if (Math.abs(themeValue - targetThemeValue) > 0.001) {
+    themeValue = THREE.MathUtils.lerp(themeValue, targetThemeValue, delta * 3.5);
+    
+    scene.background.lerpColors(darkColors.bg, lightColors.bg, themeValue);
+    scene.fog.color.lerpColors(darkColors.fog, lightColors.fog, themeValue);
+    
+    hemiLight.color.lerpColors(darkColors.hemiSky, lightColors.hemiSky, themeValue);
+    hemiLight.groundColor.lerpColors(darkColors.hemiGround, lightColors.hemiGround, themeValue);
+    hemiLight.intensity = THREE.MathUtils.lerp(darkColors.intensityHemi, lightColors.intensityHemi, themeValue);
+    
+    sun.color.lerpColors(darkColors.sun, lightColors.sun, themeValue);
+    sun.intensity = THREE.MathUtils.lerp(darkColors.intensitySun, lightColors.intensitySun, themeValue);
+    
+    fill.color.lerpColors(darkColors.fill, lightColors.fill, themeValue);
+    
+    ground.material.color.lerpColors(darkColors.ground, lightColors.ground, themeValue);
+    trnkM.color.lerpColors(darkColors.trunk, lightColors.trunk, themeValue);
+    leafMs[0].color.lerpColors(darkColors.leaf0, lightColors.leaf0, themeValue);
+    leafMs[1].color.lerpColors(darkColors.leaf1, lightColors.leaf1, themeValue);
+    leafMs[2].color.lerpColors(darkColors.leaf2, lightColors.leaf2, themeValue);
+    
+    if (particles) particles.material.color.lerpColors(darkColors.particles, lightColors.particles, themeValue);
+    
+    bloomPass.strength = THREE.MathUtils.lerp(darkBloom.strength, lightBloom.strength, themeValue);
+    bloomPass.threshold = THREE.MathUtils.lerp(darkBloom.threshold, lightBloom.threshold, themeValue);
+  }
+
+  // Pulsing lamp intensity adjusted by theme
+  const currentMin = THREE.MathUtils.lerp(darkColors.intensityLampMin, lightColors.intensityLampMin, themeValue);
+  const currentWave = THREE.MathUtils.lerp(darkColors.intensityLampWave, lightColors.intensityLampWave, themeValue);
+  lampGlowM.emissive.lerpColors(darkColors.lampEmissive, lightColors.lampEmissive, themeValue);
+  lampGlowM.emissiveIntensity = currentMin + currentWave * Math.sin(time*2.5);
+
   if(scrollProgress>=0.88){
-    ledMat.color.setHex(0x1B8C4B); ledMat.emissive.setHex(0x00ff44); ledMat.emissiveIntensity=0.9;
+    ledMat.color.setHex(0x1B8C4B); ledMat.emissive.setHex(0x00ff44); ledMat.emissiveIntensity=2.0;
   } else {
     ledMat.color.setHex(0x333333); ledMat.emissive.setHex(0x000000); ledMat.emissiveIntensity=0;
   }
   ledMat.needsUpdate=true;
+  
+  // Animate dust particles
+  if (particles) {
+    particles.rotation.y = time * 0.02;
+    particles.rotation.x = time * 0.01;
+  }
+
   // Update HUD
   const pctEl=document.getElementById('hudPct'), fillEl=document.getElementById('hudFill');
   if(pctEl) pctEl.textContent=Math.round(sp*100)+'%';
   if(fillEl) fillEl.style.width=(sp*100)+'%';
-  renderer.render(scene,camera);
+  composer.render();
   window.requestAnimationFrame(animate);
 }
 animate();
