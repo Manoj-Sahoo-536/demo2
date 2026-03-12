@@ -1,0 +1,127 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #ECECEC;
+  color: #333;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+}
+
+canvas#webgl {
+  position: fixed;
+  top: 0;
+  left: 0;
+  outline: none;
+  z-index: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+#scenes-container {
+  position: relative;
+  z-index: 1;
+  pointer-events: none; /* Let clicks pass to canvas if needed */
+}
+
+.scene {
+  height: 120vh; /* make scrolly space */
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 0 5%;
+}
+
+.content {
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 3rem;
+  border-radius: 1.5rem;
+  max-width: 450px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+  border: 1px solid rgba(255,255,255,0.7);
+  pointer-events: auto; /* Re-enable pointer events for content */
+  transform: translateY(50px);
+  opacity: 0.95;
+}
+
+.content.left { margin-right: auto; }
+.content.right { margin-left: auto; }
+
+h1, h2 {
+  font-weight: 800;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  letter-spacing: -0.03em;
+  color: #1a1a1a;
+}
+
+p {
+  font-weight: 400;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #4a4a4a;
+}
+
+.step-label {
+  display: inline-block;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  background: #1a1a1a;
+  color: white;
+  border-radius: 100px;
+  margin-bottom: 1.5rem;
+}
+
+.step-label.amber { background: #E68A00; }
+.step-label.neon-orange { background: #FF5E00; }
+.step-label.green { background: #1B8C4B; }
+
+.warning-hud, .success-hud {
+  display: flex;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+.warning-hud {
+  border-left: 4px solid #E68A00;
+}
+
+.success-hud {
+  border-left: 4px solid #1B8C4B;
+}
+
+.hud-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.hud-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+
+.hud-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1a1a1a;
+}
+
+.spacer {
+  height: 50vh; /* Final breathing space */
+}

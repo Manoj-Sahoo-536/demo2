@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3js Delivery Van Scrollytelling</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+  </head>
+  <body>
+    <!-- Three.js Canvas -->
+    <canvas id="webgl"></canvas>
+
+    <!-- Scrollytelling Content -->
+    <div class="scrolly-container" id="scenes-container">
+
+      <!-- Scene 1: Introduction / Genesis -->
+      <section class="scene">
+        <div class="content left">
+          <span class="step-label">Phase 01</span>
+          <h1>The Genesis</h1>
+          <p>The journey begins. The minimalist charcoal uniform meets the white tangerine-accented chassis. An early warning system initializes as the parcel is loaded in.</p>
+        </div>
+      </section>
+
+      <!-- Scene 2: Steady State (Transit) -->
+      <section class="scene">
+        <div class="content right">
+          <span class="step-label">Phase 02</span>
+          <h2>Steady State Transit</h2>
+          <p>Moving smoothly through thick white volumetric fog. The high-tech electric van glides past minimal architectural lines as the timeline advances.</p>
+        </div>
+      </section>
+
+      <!-- Scene 3: The Risk Event -->
+      <section class="scene">
+        <div class="content left risk">
+          <span class="step-label amber">Phase 03 — Warning</span>
+          <h2>Data Chaos Zone</h2>
+          <div class="warning-hud">
+            <div class="hud-item">
+              <span class="hud-label">Weather Risk</span>
+              <span class="hud-value">+30%</span>
+            </div>
+            <div class="hud-item">
+              <span class="hud-label">Port Strike</span>
+              <span class="hud-value">High</span>
+            </div>
+          </div>
+          <p>Entering the amber-tinted fog. The SHAP waterfall overlays explain the delay risk as the Early Warning System takes over to compute interventions.</p>
+        </div>
+      </section>
+
+      <!-- Scene 4: The Prescription (Reroute) -->
+      <section class="scene">
+        <div class="content right reroute">
+          <span class="step-label neon-orange">Phase 04 — Recovery</span>
+          <h2>Dynamic Rerouting</h2>
+          <p>A glowing tangerine-orange light trail bypasses the amber fog. SLA Recovery hits 100% as AI calculates the optimal multi-modal bypass route.</p>
+        </div>
+      </section>
+
+      <!-- Scene 5: Success (Delivery) -->
+      <section class="scene">
+        <div class="content left delivery">
+          <span class="step-label green">Phase 05</span>
+          <h2>Mission Accomplished</h2>
+          <div class="success-hud">
+            <div class="hud-item">
+               <span class="hud-label">SLA</span>
+               <span class="hud-value">Met</span>
+            </div>
+            <div class="hud-item">
+               <span class="hud-label">Saved</span>
+               <span class="hud-value">₹73,000</span>
+            </div>
+          </div>
+          <p>The parcel LED flashes to a solid green as the delivery concludes cleanly at the user's sleek doorstep step. SLA achieved, cost savings locked.</p>
+        </div>
+      </section>
+      
+      <div class="spacer"></div>
+    </div>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
