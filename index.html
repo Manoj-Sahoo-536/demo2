@@ -1,89 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>3js Delivery Van Scrollytelling</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./style.css">
-  </head>
-  <body>
-    <!-- Three.js Canvas -->
-    <canvas id="webgl"></canvas>
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RouteX — AI Freight Intelligence</title>
+  <meta name="description" content="Real-time AI-powered freight routing. Watch 2,840 km of intelligent delivery, live."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,900;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
 
-    <!-- Scrollytelling Content -->
-    <div class="scrolly-container" id="scenes-container">
+  <!-- 3D canvas -->
+  <canvas id="webgl"></canvas>
 
-      <!-- Scene 1: Introduction / Genesis -->
-      <section class="scene">
-        <div class="content left">
-          <span class="step-label">Phase 01</span>
-          <h1>The Genesis</h1>
-          <p>The journey begins. The minimalist charcoal uniform meets the white tangerine-accented chassis. An early warning system initializes as the parcel is loaded in.</p>
-        </div>
-      </section>
+  <!-- Top progress bar -->
+  <div class="pg-bar" id="pgBar"></div>
 
-      <!-- Scene 2: Steady State (Transit) -->
-      <section class="scene">
-        <div class="content right">
-          <span class="step-label">Phase 02</span>
-          <h2>Steady State Transit</h2>
-          <p>Moving smoothly through thick white volumetric fog. The high-tech electric van glides past minimal architectural lines as the timeline advances.</p>
-        </div>
-      </section>
-
-      <!-- Scene 3: The Risk Event -->
-      <section class="scene">
-        <div class="content left risk">
-          <span class="step-label amber">Phase 03 — Warning</span>
-          <h2>Data Chaos Zone</h2>
-          <div class="warning-hud">
-            <div class="hud-item">
-              <span class="hud-label">Weather Risk</span>
-              <span class="hud-value">+30%</span>
-            </div>
-            <div class="hud-item">
-              <span class="hud-label">Port Strike</span>
-              <span class="hud-value">High</span>
-            </div>
-          </div>
-          <p>Entering the amber-tinted fog. The SHAP waterfall overlays explain the delay risk as the Early Warning System takes over to compute interventions.</p>
-        </div>
-      </section>
-
-      <!-- Scene 4: The Prescription (Reroute) -->
-      <section class="scene">
-        <div class="content right reroute">
-          <span class="step-label neon-orange">Phase 04 — Recovery</span>
-          <h2>Dynamic Rerouting</h2>
-          <p>A glowing tangerine-orange light trail bypasses the amber fog. SLA Recovery hits 100% as AI calculates the optimal multi-modal bypass route.</p>
-        </div>
-      </section>
-
-      <!-- Scene 5: Success (Delivery) -->
-      <section class="scene">
-        <div class="content left delivery">
-          <span class="step-label green">Phase 05</span>
-          <h2>Mission Accomplished</h2>
-          <div class="success-hud">
-            <div class="hud-item">
-               <span class="hud-label">SLA</span>
-               <span class="hud-value">Met</span>
-            </div>
-            <div class="hud-item">
-               <span class="hud-label">Saved</span>
-               <span class="hud-value">₹73,000</span>
-            </div>
-          </div>
-          <p>The parcel LED flashes to a solid green as the delivery concludes cleanly at the user's sleek doorstep step. SLA achieved, cost savings locked.</p>
-        </div>
-      </section>
-      
-      <div class="spacer"></div>
+  <!-- Navbar -->
+  <nav class="nav">
+    <div class="nav-brand">
+      <div class="nav-icon">⬡</div>
+      <span>RouteX</span>
     </div>
+    <div class="nav-links">
+      <a href="#">Platform</a>
+      <a href="#">Solutions</a>
+      <a href="#">Enterprise</a>
+      <button class="nav-btn">Request Demo →</button>
+    </div>
+  </nav>
 
-    <script type="module" src="/main.js"></script>
-  </body>
+  <!-- Floating Route HUD -->
+  <div class="route-hud" id="routeHud">
+    <div class="hud-top">
+      <span class="hud-dot"></span>
+      <span class="hud-label">Live Tracking</span>
+    </div>
+    <div class="hud-track"><div class="hud-fill" id="hudFill"></div></div>
+    <div class="hud-bot">
+      <span>Origin</span>
+      <span class="hud-pct" id="hudPct">0%</span>
+      <span>Delivered</span>
+    </div>
+  </div>
+
+  <!-- Scroll container -->
+  <div class="scroll-wrap">
+
+    <!-- HERO -->
+    <section class="hero-sec">
+      <div class="hero-inner">
+        <div class="hero-badge">🚀 Next-Gen Freight Intelligence</div>
+        <h1 class="hero-h1">The Smartest Route<br><em>Knows No Limits.</em></h1>
+        <p class="hero-p">Watch a real-time AI system navigate 2,840&nbsp;km of disruption, risk detection, and dynamic recovery — all delivered on time.</p>
+        <div class="scroll-cue">
+          <div class="scroll-ring"><div class="scroll-dot-inner"></div></div>
+          <span>Scroll to follow the journey</span>
+        </div>
+        <div class="hero-stats">
+          <div class="hs-item"><span class="hs-num">2,840</span><span class="hs-unit">km</span><span class="hs-lbl">Route Length</span></div>
+          <div class="hs-div"></div>
+          <div class="hs-item"><span class="hs-num">99.2</span><span class="hs-unit">%</span><span class="hs-lbl">On-Time Rate</span></div>
+          <div class="hs-div"></div>
+          <div class="hs-item"><span class="hs-num">0.3</span><span class="hs-unit">s</span><span class="hs-lbl">AI Response</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHASE 01: ORIGIN -->
+    <section class="scene-sec">
+      <div class="scene-card card-left appear" id="c1">
+        <span class="badge badge-blue">Phase 01 · Origin</span>
+        <h2>Journey<br><em>Initiated.</em></h2>
+        <p>The AI core loads manifest, route graph, and live disruption feeds. The vehicle is prepped and rolling within seconds of dispatch.</p>
+        <div class="grid-2">
+          <div class="kpi"><span class="kpi-v">12.4t</span><span class="kpi-l">Payload</span></div>
+          <div class="kpi"><span class="kpi-v">6 axles</span><span class="kpi-l">Heavy Duty</span></div>
+          <div class="kpi"><span class="kpi-v">48h</span><span class="kpi-l">SLA Window</span></div>
+          <div class="kpi"><span class="kpi-v">Active</span><span class="kpi-l">AI Monitor</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHASE 02: TRANSIT -->
+    <section class="scene-sec">
+      <div class="scene-card card-right appear" id="c2">
+        <span class="badge badge-teal">Phase 02 · Transit</span>
+        <h2>Cruising<br><em>Smoothly.</em></h2>
+        <p>1,200 km covered without a single deviation. Sensor telemetry streams at 100ms intervals — fuel optimized, speed governed.</p>
+        <div class="live-grid">
+          <div class="live-row"><span class="live-dot green"></span>GPS Tracking — Active</div>
+          <div class="live-row"><span class="live-dot green"></span>Weather — Clear Skies</div>
+          <div class="live-row"><span class="live-dot green"></span>Border Clearance — Done</div>
+          <div class="live-row"><span class="live-dot yellow"></span>Traffic — Monitoring</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHASE 03: RISK -->
+    <section class="scene-sec">
+      <div class="scene-card card-left appear warn-card" id="c3">
+        <span class="badge badge-amber">⚠ Phase 03 · Risk Alert</span>
+        <h2>Disruption<br><em>Detected.</em></h2>
+        <div class="risk-grid">
+          <div class="risk-kpi"><span class="rk-v red">+34%</span><span class="rk-l">Weather Risk</span></div>
+          <div class="risk-kpi"><span class="rk-v red">High</span><span class="rk-l">Port Strike</span></div>
+          <div class="risk-kpi"><span class="rk-v amber">67%</span><span class="rk-l">Delay Prob.</span></div>
+          <div class="risk-kpi"><span class="rk-v green">14</span><span class="rk-l">Alt Routes</span></div>
+        </div>
+        <p>Early Warning System fires. The model evaluates 14 bypass paths in 0.3 seconds — SLA risk neutralised before it escalates.</p>
+      </div>
+    </section>
+
+    <!-- PHASE 04: REROUTE -->
+    <section class="scene-sec">
+      <div class="scene-card card-right appear reroute-card" id="c4">
+        <span class="badge badge-orange">Phase 04 · Recovery</span>
+        <h2>AI Reroute<br><em>Complete.</em></h2>
+        <p>Optimal path selected. New route avoids port, reduces delay from 11h → 0h. Carrier notified via automated EDI within 2 seconds.</p>
+        <div class="prog-block">
+          <div class="prog-row"><span>SLA Recovery</span><span class="prog-pct">100%</span></div>
+          <div class="prog-track"><div class="prog-fill orange-fill" id="f1"></div></div>
+          <div class="prog-row"><span>Cost Saved</span><span class="prog-pct">₹73,000</span></div>
+          <div class="prog-track"><div class="prog-fill blue-fill" id="f2"></div></div>
+          <div class="prog-row"><span>Time Saved</span><span class="prog-pct">2h 14m</span></div>
+          <div class="prog-track"><div class="prog-fill green-fill" id="f3"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHASE 05: DELIVERED -->
+    <section class="scene-sec">
+      <div class="scene-card card-left appear delivery-card" id="c5">
+        <span class="badge badge-green">✓ Phase 05 · Delivered</span>
+        <h2>Mission<br><em>Accomplished.</em></h2>
+        <div class="success-grid">
+          <div class="s-kpi"><span class="sk-v">On Time</span><span class="sk-l">SLA Status</span></div>
+          <div class="s-kpi"><span class="sk-v">₹73K</span><span class="sk-l">Cost Saved</span></div>
+          <div class="s-kpi"><span class="sk-v">2h 14m</span><span class="sk-l">Time Saved</span></div>
+          <div class="s-kpi"><span class="sk-v">Zero</span><span class="sk-l">Incidents</span></div>
+        </div>
+        <p>LED status — solid green. Customer notified. POD captured. The most complex delivery made effortlessly simple.</p>
+        <button class="cta-btn" onclick="alert('Coming soon!')">Start Free Trial  →</button>
+      </div>
+    </section>
+
+    <div class="spacer"></div>
+  </div><!-- /scroll-wrap -->
+
+  <script type="module" src="/main.js"></script>
+  <script>
+    // Progress bar
+    const pb=document.getElementById('pgBar');
+    window.addEventListener('scroll',()=>{
+      const max=document.body.scrollHeight-window.innerHeight;
+      pb.style.width=(window.scrollY/max*100)+'%';
+    });
+    // Appear on scroll
+    const obs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');}});
+    },{threshold:0.18});
+    document.querySelectorAll('.appear').forEach(el=>obs.observe(el));
+    // Progress fill bars
+    const fobs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting){ e.target.classList.add('filled'); }});
+    },{threshold:0.5});
+    document.querySelectorAll('.prog-fill').forEach(f=>fobs.observe(f));
+  </script>
+</body>
 </html>
