@@ -2048,3 +2048,231 @@ body.dark-mode .truck-cta-btn:hover{
 body.dark-mode .truck-svg circle[fill="#1e293b"]{
   fill:#0a1628;
 }
+
+/* ═══════════════════════════════════════════════════════
+   Get Started CTA Section
+   ═══════════════════════════════════════════════════════ */
+.gs-cta-section{
+  position:relative;
+  width:100%;
+  padding:3.5rem 5%;
+  margin-bottom:4rem;
+  overflow:hidden;
+  z-index:20;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,193,255,0.12) 0%, transparent 70%),
+    linear-gradient(180deg,
+      var(--bg-primary) 0%,
+      rgba(0,193,255,0.04) 40%,
+      rgba(0,193,255,0.08) 60%,
+      var(--bg-primary) 100%
+    );
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;
+}
+body.dark-mode .gs-cta-section{
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,193,255,0.18) 0%, transparent 70%),
+    linear-gradient(180deg,
+      rgba(3,7,18,0.98) 0%,
+      rgba(0,193,255,0.06) 40%,
+      rgba(0,193,255,0.1) 60%,
+      rgba(3,7,18,0.98) 100%
+    );
+}
+
+/* Grid canvas overlay */
+.gs-grid-canvas{
+  position:absolute;inset:0;width:100%;height:100%;
+  pointer-events:none;z-index:0;
+  opacity:0.45;
+}
+body.dark-mode .gs-grid-canvas{opacity:0.28;}
+
+/* Ambient glow orbs */
+.gs-orb{
+  position:absolute;border-radius:50%;pointer-events:none;z-index:0;
+}
+.gs-orb-left{
+  width:560px;height:480px;
+  top:-80px;left:-140px;
+  background:radial-gradient(circle,rgba(0,193,255,0.12) 0%,rgba(0,193,255,0.04) 50%,transparent 70%);
+  animation:blobDrift 14s ease-in-out infinite;
+  animation-delay:-3s;
+}
+.gs-orb-right{
+  width:500px;height:440px;
+  bottom:-60px;right:-120px;
+  background:radial-gradient(circle,rgba(99,102,241,0.10) 0%,rgba(0,193,255,0.06) 50%,transparent 70%);
+  animation:blobDrift 17s ease-in-out infinite reverse;
+  animation-delay:-7s;
+}
+
+/* Inner content wrapper — full glass card */
+.gs-inner{
+  position:relative;z-index:1;
+  max-width:720px;width:100%;   /* was 840px */
+  margin:0 auto;
+  padding:2.2rem 2.5rem;        /* was 4rem 3.5rem */
+  background:var(--bg-card);
+  backdrop-filter:blur(32px) saturate(1.8);
+  -webkit-backdrop-filter:blur(32px) saturate(1.8);
+  border:1px solid var(--border-card);
+  border-radius:1.5rem;         /* was 2rem */
+  box-shadow:
+    0 0 0 1px rgba(0,193,255,0.15),
+    0 4px 60px rgba(0,193,255,0.08),
+    0 32px 80px rgba(0,0,0,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.7);
+  display:flex;flex-direction:column;align-items:center;gap:1rem; /* was 1.6rem */
+}
+body.dark-mode .gs-inner{
+  background:rgba(3,7,18,0.7);
+  border-color:rgba(0,193,255,0.18);
+  box-shadow:
+    0 0 0 1px rgba(0,193,255,0.22),
+    0 4px 60px rgba(0,193,255,0.14),
+    0 32px 80px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+/* Top edge accent line */
+.gs-inner::before{
+  content:'';
+  position:absolute;top:0;left:10%;right:10%;height:2px;
+  background:linear-gradient(90deg,
+    transparent 0%,
+    rgba(0,193,255,0.5) 20%,
+    rgba(0,193,255,1) 50%,
+    rgba(0,193,255,0.5) 80%,
+    transparent 100%
+  );
+  box-shadow:0 0 16px rgba(0,193,255,0.3);
+  border-radius:1px;
+}
+
+/* Badge */
+.gs-badge{
+  display:inline-flex;align-items:center;gap:.55rem;
+  padding:.4rem 1.1rem .4rem .75rem;
+  border-radius:var(--radius-pill);
+  background:rgba(0,193,255,0.08);
+  border:1px solid rgba(0,193,255,0.25);
+  font-size:.75rem;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--accent-1);
+  backdrop-filter:blur(12px);
+}
+.gs-badge-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:rgb(0,193,255);
+  box-shadow:0 0 8px rgb(0,193,255),0 0 16px rgba(0,193,255,0.4);
+  animation:pulse 2s ease-in-out infinite;
+  flex-shrink:0;
+}
+
+/* Headline */
+.gs-headline{
+  font-family:var(--font-display);
+  font-size:clamp(1.5rem,3vw,2.4rem);  /* was clamp(2rem,4vw,3.2rem) */
+  font-weight:800;
+  line-height:1.12;
+  color:var(--text-primary);
+  letter-spacing:-.02em;
+}
+.gs-headline em{
+  font-style:normal;
+  background:linear-gradient(135deg,rgb(0,193,255) 0%,#38bdf8 40%,var(--violet) 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* Sub-copy */
+.gs-sub{
+  font-size:.92rem;line-height:1.65;  /* was 1.05rem */
+  color:var(--text-secondary);
+  max-width:520px;                    /* was 580px */
+}
+
+/* Stats strip */
+.gs-stats{
+  display:flex;align-items:center;gap:0;
+  background:var(--bg-card);
+  border:1px solid var(--border-card);
+  border-radius:var(--radius);
+  overflow:hidden;
+  width:100%;max-width:480px;
+}
+body.dark-mode .gs-stats{
+  background:rgba(255,255,255,0.03);
+  border-color:rgba(255,255,255,0.07);
+}
+.gs-stat{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;gap:.15rem;
+  padding:1rem .5rem;
+  transition:background var(--t-fast) ease;
+}
+.gs-stat:hover{background:rgba(0,193,255,0.05);}
+.gs-stat-num{
+  font-family:var(--font-display);
+  font-size:1.5rem;font-weight:700;
+  color:var(--accent-1);line-height:1;
+}
+.gs-stat-plus{
+  font-size:.9rem;font-weight:600;
+  color:var(--accent-1);opacity:0.8;
+}
+.gs-stat-lbl{
+  font-size:.68rem;font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text-tertiary);
+}
+.gs-stat-div{
+  width:1px;align-self:stretch;
+  background:var(--border-card);
+}
+
+/* Get Started button size override */
+.gs-cta-btn{
+  padding:.75rem 1.8rem .75rem 1.2rem; /* was 1rem 2.2rem 1rem 1.6rem */
+  font-size:.9rem;
+  box-shadow:0 10px 40px rgba(0,193,255,0.45);
+}
+.gs-cta-btn:hover{
+  box-shadow:0 16px 52px rgba(0,193,255,0.6);
+}
+.gs-cta-btn .truck-svg{
+  width:46px;height:28px;  /* was 54x33 */
+}
+.gs-cta-btn .truck-cta-label{
+  font-size:.95rem;  /* was 1.05rem */
+}
+.gs-cta-btn .truck-cta-arrow{
+  font-size:1.05rem;  /* was 1.2rem */
+}
+
+/* ── Navbar compact truck button ── */
+.nav-truck-btn{
+  padding:.38rem 1rem .38rem .7rem;
+  border-radius:var(--radius-pill);
+  box-shadow:0 4px 18px rgba(0,193,255,0.35);
+  gap:.5rem;
+}
+.nav-truck-btn:hover{
+  transform:translateY(-1px) scale(1.02);
+  box-shadow:0 6px 24px rgba(0,193,255,0.5);
+}
+.nav-truck-btn .truck-svg{width:28px;height:17px;}
+.nav-truck-btn .truck-cta-label{font-size:.78rem;letter-spacing:.03em;}
+.nav-truck-btn .truck-cta-arrow{
+  font-size:.85rem;
+  animation:arrowForward 0.8s ease-in-out infinite alternate;
+}
+
+/* Disclaimer line */
+.gs-disclaimer{
+  font-size:.75rem;
+  color:var(--text-tertiary);
+  letter-spacing:.02em;
+}
