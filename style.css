@@ -2380,3 +2380,503 @@ body.dark-mode .gs-stats{
   color:var(--text-tertiary);
   letter-spacing:.02em;
 }
+
+/* ═══════════════════════════════════════════════════════
+   AUTH MODAL — Truck Animation + Sign In/Sign Up
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Overlay ── */
+.auth-overlay{
+  position:fixed;inset:0;z-index:2000;
+  display:flex;align-items:center;justify-content:center;
+  padding:1rem;
+}
+.auth-backdrop{
+  position:absolute;inset:0;
+  background:rgba(3,7,18,0.75);
+  backdrop-filter:blur(12px) saturate(1.4);
+  -webkit-backdrop-filter:blur(12px) saturate(1.4);
+  animation:authBdFadeIn .4s var(--ease) forwards;
+}
+@keyframes authBdFadeIn{from{opacity:0;}to{opacity:1;}}
+
+/* ── Modal Container ── */
+.auth-modal{
+  position:relative;z-index:1;
+  width:min(480px,96vw);border-radius:1.5rem;
+  overflow:hidden;
+  box-shadow:0 40px 120px rgba(0,0,0,0.55),0 0 0 1px rgba(255,255,255,0.08);
+  animation:authModalIn .5s var(--ease-spring) forwards;
+}
+@keyframes authModalIn{
+  from{opacity:0;transform:scale(0.9) translateY(24px);}
+  to{opacity:1;transform:scale(1) translateY(0);}
+}
+
+/* ── Truck Animation Stage ── */
+.auth-truck-stage{
+  position:relative;width:100%;height:260px;overflow:hidden;
+  background:linear-gradient(180deg,#a8d8ea 0%,#d4f0f8 45%,#a8d8ea 100%);
+}
+body.dark-mode .auth-truck-stage{
+  background:linear-gradient(180deg,#080c18 0%,#0a1020 45%,#080c18 100%);
+}
+
+/* Sky */
+.ats-sky{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,#64b5d9 0%,#b8e0f0 55%,#e8f7ff 100%);
+}
+body.dark-mode .ats-sky{
+  background:linear-gradient(180deg,#020814 0%,#080c18 55%,#0a1428 100%);
+}
+
+/* Clouds */
+.ats-cloud{
+  position:absolute;
+  height:28px;border-radius:50px;
+  background:rgba(255,255,255,0.82);
+  filter:blur(4px);
+  animation:cloudDrift linear infinite;
+}
+.ats-cloud::before,.ats-cloud::after{
+  content:'';position:absolute;background:inherit;border-radius:50%;
+}
+.ats-cloud::before{width:55%;height:140%;top:-40%;left:20%;}
+.ats-cloud::after{width:40%;height:120%;top:-30%;left:55%;}
+@keyframes cloudDrift{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(calc(100vw + 200px));}
+}
+body.dark-mode .ats-cloud{
+  background:rgba(14,30,60,0.7);
+}
+
+/* Trees */
+.ats-trees{
+  position:absolute;bottom:72px;left:0;right:0;height:110px;
+  pointer-events:none;
+}
+.ats-tree{
+  position:absolute;bottom:0;width:28px;
+  background:linear-gradient(180deg,#4da142 0%,#3d8835 60%,#7a5230 60%,#7a5230 100%);
+  border-radius:50% 50% 0 0 / 60% 60% 0 0;
+  box-shadow:0 4px 12px rgba(0,0,0,0.15);
+}
+.ats-tree::before{
+  content:'';position:absolute;bottom:100%;left:50%;transform:translateX(-50%);
+  width:140%;height:50%;
+  background:inherit;border-radius:50% 50% 0 0 / 65% 65% 0 0;
+}
+body.dark-mode .ats-tree{
+  background:linear-gradient(180deg,#1a1020 0%,#120a18 60%,#1a1b24 60%,#1a1b24 100%);
+}
+
+/* Road */
+.ats-road-wrap{
+  position:absolute;bottom:0;left:0;right:0;height:75px;
+}
+.ats-road{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,#2e3038 0%,#282c34 100%);
+  box-shadow:0 -3px 20px rgba(0,0,0,0.25);
+}
+.ats-road::before,.ats-road::after{
+  content:'';position:absolute;top:0;bottom:0;width:18px;
+  background:#FFD600;
+}
+.ats-road::before{left:14px;}
+.ats-road::after{right:14px;}
+/* Dashed center line (animated) */
+.ats-road-lines{
+  position:absolute;top:50%;left:-100%;right:0;height:6px;
+  margin-top:-3px;
+  background:repeating-linear-gradient(
+    90deg,
+    rgba(255,255,255,0.9) 0px,
+    rgba(255,255,255,0.9) 40px,
+    transparent 40px,
+    transparent 80px
+  );
+  animation:roadDash 0.6s linear infinite;
+}
+@keyframes roadDash{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(80px);}
+}
+
+/* ── CSS 3D-Style Delivery Truck ── */
+.ats-vehicle{
+  position:absolute;
+  bottom:55px;
+  /* Start off-screen left, animate to off-screen right */
+  left:-340px;
+  display:flex;
+  align-items:flex-end;
+  gap:0;
+  filter:drop-shadow(0 8px 24px rgba(0,0,0,0.35));
+}
+/* Driving animation: enter from left → exit to right */
+.ats-vehicle.driving{
+  animation:truckDrive 2.8s cubic-bezier(0.25,0.1,0.6,1) forwards;
+}
+@keyframes truckDrive{
+  0%  { left: -340px; }
+  35% { left: 15%;    }   /* slow down mid-screen */
+  55% { left: 30%;    }   /* brief pause / slow crawl */
+  100%{ left: calc(100% + 80px); }
+}
+
+/* Trailer body */
+.atv-trailer{
+  position:relative;
+  width:190px;height:88px;
+  background:linear-gradient(180deg,#FFC200 0%,#E6A800 100%);
+  border-radius:4px 0 0 4px;
+  border:2px solid #cc9800;
+  overflow:hidden;
+}
+.atv-trailer-top{
+  position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,#f5c500,#ffe066,#f5c500);
+}
+.atv-trailer-bottom{
+  position:absolute;bottom:0;left:0;right:0;height:6px;
+  background:#cc9800;
+}
+/* Side ribs */
+.atv-rib{
+  position:absolute;top:0;bottom:0;width:3px;
+  background:rgba(0,0,0,0.12);
+  border-radius:1px;
+}
+/* Trailer brand */
+.atv-trailer-brand{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  color:rgba(255,255,255,0.9);font-size:10px;font-weight:700;
+  font-family:var(--font-display);letter-spacing:.06em;
+  text-shadow:0 1px 4px rgba(0,0,0,0.3);
+}
+/* Tail lights */
+.atv-trailer::after{
+  content:'';position:absolute;right:0;top:50%;transform:translateY(-50%);
+  width:5px;height:22px;border-radius:2px;
+  background:#ff1400;box-shadow:0 0 8px #ff0000;
+}
+
+/* Cab */
+.atv-cab{
+  position:relative;
+  width:90px;height:88px;
+  background:linear-gradient(180deg,#FFC200,#FFB000);
+  border-radius:0 6px 0 0;
+  border:2px solid #cc9800;
+  border-left:none;
+  flex-shrink:0;
+}
+/* Windshield */
+.atv-windshield{
+  position:absolute;top:10px;right:6px;
+  width:52px;height:42px;border-radius:4px 6px 0 0;
+  background:linear-gradient(135deg,rgba(180,220,255,0.85),rgba(140,200,255,0.65));
+  border:2px solid rgba(255,255,255,0.55);
+  box-shadow:inset 0 0 12px rgba(255,255,255,0.3);
+}
+/* Windshield glare */
+.atv-windshield::after{
+  content:'';position:absolute;top:4px;left:4px;width:12px;height:24px;
+  background:rgba(255,255,255,0.4);border-radius:3px;transform:rotate(-12deg);
+}
+/* Headlights */
+.atv-headlight{
+  position:absolute;right:0;
+  width:10px;border-radius:2px;
+  background:#f8fbff;
+  box-shadow:0 0 12px rgba(255,255,200,0.8),0 0 30px rgba(255,240,160,0.5);
+}
+.atv-headlight-top{top:14px;height:6px;}
+.atv-headlight-main{top:22px;height:14px;}
+/* Grille */
+.atv-grille{
+  position:absolute;right:0;bottom:30px;
+  width:10px;height:22px;border-radius:1px;
+  background:repeating-linear-gradient(180deg,#08090c 0px,#08090c 3px,rgba(255,255,255,0.05) 3px,rgba(255,255,255,0.05) 5px);
+}
+/* Bumper */
+.atv-bumper{
+  position:absolute;bottom:0;right:0;
+  width:92px;height:16px;border-radius:0 0 4px 0;
+  background:linear-gradient(180deg,#0a0b0d,#1a1c20);
+  border-top:2px solid rgba(255,255,255,0.08);
+}
+/* Exhaust stack */
+.atv-exhaust-wrap{
+  position:absolute;top:-28px;left:14px;
+}
+.atv-exhaust{
+  width:8px;height:28px;border-radius:2px 2px 0 0;
+  background:linear-gradient(180deg,#303235,#1a1c1e);
+  border:1px solid rgba(255,255,255,0.08);
+}
+/* Smoke puffs */
+.atv-smoke{
+  position:absolute;border-radius:50%;
+  background:rgba(200,210,220,0.6);
+  filter:blur(3px);
+  animation:smokePuff 1.2s ease-out infinite;
+}
+.atv-smoke-1{width:16px;height:16px;top:-12px;left:-4px;animation-delay:0s;}
+.atv-smoke-2{width:22px;height:22px;top:-22px;left:-8px;animation-delay:.4s;}
+.atv-smoke-3{width:18px;height:18px;top:-18px;left:2px;animation-delay:.8s;}
+body.dark-mode .atv-smoke{background:rgba(140,160,180,0.5);}
+@keyframes smokePuff{
+  0%{transform:translateY(0) scale(0.6);opacity:.8;}
+  100%{transform:translateY(-30px) scale(1.8);opacity:0;}
+}
+
+/* Wheels */
+.atv-wheel{
+  position:absolute;bottom:-13px;
+  width:30px;height:30px;border-radius:50%;
+  background:radial-gradient(circle,#585c62 30%,#141516 60%);
+  border:3px solid #141516;
+  box-shadow:0 3px 8px rgba(0,0,0,0.4);
+  animation:wheelSpin .4s linear infinite;
+}
+.atv-wheel-1{ left:12px; }   /* trailer rear */
+.atv-wheel-2{ left:120px; }  /* trailer front */
+.atv-wheel-3{ left:222px; }  /* cab front */
+.atv-rim{
+  position:absolute;inset:4px;border-radius:50%;
+  background:radial-gradient(circle,#8090a0 20%,#585c62 70%);
+}
+@keyframes wheelSpin{
+  0%{transform:rotate(0deg);}
+  100%{transform:rotate(-360deg);}
+}
+
+/* Dust particles */
+.atv-dust{
+  position:absolute;bottom:2px;border-radius:50%;
+  background:rgba(180,160,120,0.5);
+  filter:blur(4px);
+  animation:dustFly 0.7s ease-out infinite;
+}
+.atv-dust-1{width:20px;height:10px;left:18px;animation-delay:0s;}
+.atv-dust-2{width:14px;height:8px;left:8px;animation-delay:.25s;}
+.atv-dust-3{width:18px;height:10px;left:28px;animation-delay:.5s;}
+body.dark-mode .atv-dust{background:rgba(80,100,140,0.55);}
+@keyframes dustFly{
+  0%{transform:translate(0,0) scale(1);opacity:.7;}
+  100%{transform:translate(-24px,-16px) scale(2.2);opacity:0;}
+}
+
+/* Stage label */
+.ats-label{
+  position:absolute;bottom:82px;left:0;right:0;
+  text-align:center;
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+  font-size:.78rem;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.85);
+  text-shadow:0 2px 8px rgba(0,0,0,0.5);
+  animation:labelPulse 2s ease-in-out infinite;
+}
+body.dark-mode .ats-label{color:rgba(0,193,255,0.9);}
+@keyframes labelPulse{
+  0%,100%{opacity:1;}
+  50%{opacity:.6;}
+}
+.ats-label-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:#00c1ff;
+  box-shadow:0 0 10px #00c1ff;
+  animation:pulse 2s ease-in-out infinite;
+}
+
+/* ── Auth Form Panel ── */
+.auth-form-panel{
+  background:var(--bg-card);
+  backdrop-filter:blur(32px) saturate(1.8);
+  -webkit-backdrop-filter:blur(32px) saturate(1.8);
+  border-top:1px solid var(--border-card);
+  padding:2rem 2.2rem 2rem;
+  position:relative;
+  transition:opacity .5s var(--ease);
+}
+body.dark-mode .auth-form-panel{
+  background:rgba(8,12,24,0.88);
+  border-top-color:rgba(0,193,255,0.12);
+}
+
+/* Close Button */
+.auth-close-btn{
+  position:absolute;top:1rem;right:1rem;
+  width:32px;height:32px;border-radius:50%;
+  background:var(--bg-card);
+  border:1px solid var(--border-subtle);
+  color:var(--text-secondary);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all var(--t-fast) var(--ease);
+}
+.auth-close-btn:hover{
+  background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.3);
+  color:#ef4444;transform:scale(1.1);
+}
+
+/* Brand */
+.auth-brand{
+  display:flex;align-items:center;gap:.55rem;
+  font-family:var(--font-display);font-weight:700;font-size:1.1rem;
+  color:var(--text-primary);margin-bottom:1.4rem;
+}
+.auth-brand-icon{
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,rgba(0,193,255,0.18),rgba(14,165,233,0.12));
+  border:1px solid rgba(0,193,255,0.25);
+  border-radius:.7rem;
+}
+
+/* Tabs */
+.auth-tabs{
+  position:relative;display:flex;
+  background:var(--border-subtle);
+  border-radius:var(--radius-pill);
+  padding:3px;margin-bottom:1.6rem;
+}
+.auth-tab{
+  flex:1;padding:.52rem;font-size:.86rem;font-weight:600;
+  background:transparent;border:none;border-radius:var(--radius-pill);
+  color:var(--text-secondary);cursor:pointer;
+  position:relative;z-index:1;
+  transition:color var(--t-fast) var(--ease);
+}
+.auth-tab--active{color:var(--text-primary);}
+.auth-tab-slider{
+  position:absolute;top:3px;bottom:3px;left:3px;
+  width:calc(50% - 3px);
+  background:var(--nav-bg);
+  border-radius:var(--radius-pill);
+  border:1px solid var(--border-card);
+  box-shadow:var(--shadow-sm);
+  transition:transform var(--t-md) var(--ease-spring);
+}
+.auth-tab-slider.right{transform:translateX(calc(100% + 3px));}
+
+/* Panels */
+.auth-panel{animation:panelSlideIn .35s var(--ease) forwards;}
+@keyframes panelSlideIn{
+  from{opacity:0;transform:translateY(10px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* Heading */
+.auth-heading{
+  font-family:var(--font-display);font-size:1.3rem;font-weight:700;
+  color:var(--text-primary);margin-bottom:.25rem;
+}
+.auth-sub{font-size:.83rem;color:var(--text-secondary);margin-bottom:1.2rem;}
+
+/* Form */
+.auth-form{display:flex;flex-direction:column;gap:.85rem;}
+.auth-field-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;}
+.auth-field{display:flex;flex-direction:column;gap:.3rem;position:relative;}
+.auth-field label{font-size:.75rem;font-weight:600;color:var(--text-secondary);letter-spacing:.03em;}
+.auth-field input{
+  padding:.65rem .9rem;
+  background:var(--bg-card);
+  border:1.5px solid var(--border-subtle);
+  border-radius:.75rem;
+  color:var(--text-primary);
+  font-size:.88rem;font-family:var(--font-sans);
+  transition:border-color var(--t-fast) var(--ease),box-shadow var(--t-fast) var(--ease);
+  outline:none;
+}
+body.dark-mode .auth-field input{
+  background:rgba(15,23,42,0.6);
+  border-color:rgba(255,255,255,0.06);
+}
+.auth-field input::placeholder{color:var(--text-tertiary);}
+.auth-field input:focus{
+  border-color:var(--accent-1);
+  box-shadow:0 0 0 3px rgba(0,193,255,0.14);
+}
+.auth-forgot{
+  position:absolute;right:0;bottom:calc(100% + .3rem);
+  font-size:.72rem;color:var(--accent-1);text-decoration:none;font-weight:500;
+}
+.auth-forgot:hover{text-decoration:underline;}
+
+/* Submit button */
+.auth-submit-btn{
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+  padding:.78rem 1.5rem;margin-top:.3rem;
+  background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+  color:#fff;font-size:.9rem;font-weight:600;
+  border:none;border-radius:var(--radius-pill);
+  cursor:pointer;letter-spacing:.02em;
+  box-shadow:0 8px 28px rgba(0,193,255,0.35);
+  transition:transform var(--t-fast) var(--ease-spring),box-shadow var(--t-md) var(--ease);
+  overflow:hidden;position:relative;
+}
+.auth-submit-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 30%,rgba(255,255,255,0.22) 50%,transparent 70%);
+  transform:translateX(-100%);
+  transition:transform .55s var(--ease);
+}
+.auth-submit-btn:hover{
+  transform:translateY(-2px) scale(1.02);
+  box-shadow:0 12px 36px rgba(0,193,255,0.5);
+}
+.auth-submit-btn:hover::before{transform:translateX(100%);}
+.auth-submit-btn:active{transform:scale(0.98);}
+
+/* Divider */
+.auth-divider{
+  display:flex;align-items:center;gap:.75rem;margin:.9rem 0 .7rem;
+}
+.auth-divider::before,.auth-divider::after{
+  content:'';flex:1;height:1px;background:var(--border-subtle);
+}
+.auth-divider span{font-size:.72rem;color:var(--text-tertiary);white-space:nowrap;}
+
+/* Social Buttons */
+.auth-socials{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;}
+.auth-social-btn{
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+  padding:.55rem 1rem;
+  background:var(--bg-card);
+  border:1.5px solid var(--border-subtle);
+  border-radius:.75rem;
+  color:var(--text-secondary);font-size:.83rem;font-weight:500;
+  cursor:pointer;
+  transition:all var(--t-fast) var(--ease);
+}
+.auth-social-btn:hover{
+  background:var(--bg-card-hover);
+  border-color:rgba(0,193,255,0.2);
+  color:var(--text-primary);
+  transform:translateY(-2px);
+  box-shadow:0 4px 16px rgba(0,0,0,0.06);
+}
+
+/* Terms */
+.auth-terms{
+  margin-top:.9rem;font-size:.72rem;
+  color:var(--text-tertiary);text-align:center;line-height:1.6;
+}
+.auth-terms a{color:var(--accent-1);text-decoration:none;}
+.auth-terms a:hover{text-decoration:underline;}
+
+/* ── Responsive for small screens ── */
+@media(max-width:480px){
+  .auth-modal{border-radius:1rem;}
+  .auth-form-panel{padding:1.4rem 1.2rem 1.6rem;}
+  .auth-field-row{grid-template-columns:1fr;}
+  .auth-socials{grid-template-columns:1fr;}
+  .auth-truck-stage{height:200px;}
+  .ats-vehicle{bottom:42px;}
+}
+

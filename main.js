@@ -852,3 +852,144 @@ animate();
   }
   draw();
 })();
+
+/* ═══════════════════════════════════════════════════════
+   AUTH MODAL — Truck Animation + Sign In/Sign Up Logic
+   ═══════════════════════════════════════════════════════ */
+(function() {
+  const overlay   = document.getElementById('authOverlay');
+  const backdrop  = document.getElementById('authBackdrop');
+  const truck     = document.getElementById('atsTruck');
+  const stage     = document.getElementById('authTruckStage');
+  const formPanel = document.getElementById('authFormPanel');
+  const closeBtn  = document.getElementById('authCloseBtn');
+  const tabSignIn = document.getElementById('tabSignIn');
+  const tabSignUp = document.getElementById('tabSignUp');
+  const slider    = document.getElementById('authTabSlider');
+  const panelIn   = document.getElementById('panelSignIn');
+  const panelUp   = document.getElementById('panelSignUp');
+  let   animDone  = false;
+
+  if (!overlay) return;
+
+  /* ── Open Modal ── */
+  function openModal() {
+    overlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    animDone = false;
+
+    // Reset truck position & form
+    truck.classList.remove('driving');
+    formPanel.style.opacity = '0';
+    formPanel.style.pointerEvents = 'none';
+
+    // Force reflow so class removal takes effect
+    void truck.offsetWidth;
+
+    // Start truck drive after a tiny delay so the modal open animation is visible
+    setTimeout(() => {
+      truck.classList.add('driving');
+
+      // Animation duration from CSS is 2.8s
+      setTimeout(() => {
+        // Truck has exited — fade in form panel, shrink stage
+        animDone = true;
+        stage.style.transition = 'height .55s cubic-bezier(.4,0,.2,1)';
+        stage.style.height = '0px';
+        stage.style.overflow = 'hidden';
+
+        setTimeout(() => {
+          formPanel.style.opacity = '1';
+          formPanel.style.pointerEvents = 'auto';
+          // Focus first input
+          const firstInput = formPanel.querySelector('input');
+          if (firstInput) firstInput.focus();
+        }, 300);
+      }, 2900);
+    }, 320);
+  }
+
+  /* ── Close Modal ── */
+  function closeModal() {
+    overlay.style.display = 'none';
+    document.body.style.overflow = '';
+    // Reset stage height for next time
+    stage.style.transition = '';
+    stage.style.height = '';
+    stage.style.overflow = '';
+    // Reset truck
+    truck.classList.remove('driving');
+  }
+
+  /* ── Trigger: all "Get Started" buttons ── */
+  // Nav Get Started button
+  const getStartedBtn = document.getElementById('getStartedBtn');
+  if (getStartedBtn) getStartedBtn.addEventListener('click', openModal);
+  // CTA Get Started button (also named ctaBtn)
+  const ctaBtn = document.getElementById('ctaBtn');
+  if (ctaBtn) ctaBtn.addEventListener('click', openModal);
+
+  /* ── Close: button or backdrop ── */
+  if (closeBtn)  closeBtn.addEventListener('click', closeModal);
+  if (backdrop)  backdrop.addEventListener('click', closeModal);
+
+  // Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.style.display !== 'none') closeModal();
+  });
+
+  /* ── Tabs ── */
+  function switchTab(toSignUp) {
+    if (toSignUp) {
+      tabSignIn.classList.remove('auth-tab--active');
+      tabSignIn.setAttribute('aria-selected', 'false');
+      tabSignUp.classList.add('auth-tab--active');
+      tabSignUp.setAttribute('aria-selected', 'true');
+      slider.classList.add('right');
+      panelIn.hidden = true;
+      panelUp.hidden = false;
+    } else {
+      tabSignUp.classList.remove('auth-tab--active');
+      tabSignUp.setAttribute('aria-selected', 'false');
+      tabSignIn.classList.add('auth-tab--active');
+      tabSignIn.setAttribute('aria-selected', 'true');
+      slider.classList.remove('right');
+      panelIn.hidden = false;
+      panelUp.hidden = true;
+    }
+  }
+
+  if (tabSignIn) tabSignIn.addEventListener('click', () => switchTab(false));
+  if (tabSignUp) tabSignUp.addEventListener('click', () => switchTab(true));
+
+  /* ── Form submit feedback (demo) ── */
+  const formSignIn = document.getElementById('formSignIn');
+  const formSignUp = document.getElementById('formSignUp');
+
+  if (formSignIn) {
+    formSignIn.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const btn = formSignIn.querySelector('.auth-submit-btn');
+      btn.innerHTML = '<span>Signing in…</span>';
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.innerHTML = '<span>✓ Welcome back!</span>';
+        setTimeout(closeModal, 1200);
+      }, 1400);
+    });
+  }
+
+  if (formSignUp) {
+    formSignUp.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const btn = formSignUp.querySelector('.auth-submit-btn');
+      btn.innerHTML = '<span>Creating account…</span>';
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.innerHTML = '<span>✓ Account Created!</span>';
+        setTimeout(closeModal, 1200);
+      }, 1800);
+    });
+  }
+})();
+
