@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════
-   RouteX — Premium Modern Design System
+   Guardian — Premium Modern Design System
    ═══════════════════════════════════════════════════════ */
 
 /* ─── Reset & Foundation ─────────────────────────────── */
@@ -2712,6 +2712,8 @@ body.dark-mode .ats-label{color:rgba(0,193,255,0.9);}
   border-top:1px solid var(--border-card);
   padding:2rem 2.2rem 2rem;
   position:relative;
+  overflow:hidden;
+  box-sizing:border-box;
   transition:opacity .5s var(--ease);
 }
 body.dark-mode .auth-form-panel{
@@ -2789,7 +2791,8 @@ body.dark-mode .auth-form-panel{
 
 /* Form */
 .auth-form{display:flex;flex-direction:column;gap:.85rem;}
-.auth-field-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;}
+.auth-field-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;min-width:0;}
+.auth-field-row > .auth-field{min-width:0;}
 .auth-field{display:flex;flex-direction:column;gap:.3rem;position:relative;}
 .auth-field label{font-size:.75rem;font-weight:600;color:var(--text-secondary);letter-spacing:.03em;}
 .auth-field input{
@@ -2812,8 +2815,11 @@ body.dark-mode .auth-field input{
   box-shadow:0 0 0 3px rgba(0,193,255,0.14);
 }
 .auth-forgot{
-  position:absolute;right:0;bottom:calc(100% + .3rem);
+  display:block;
+  text-align:right;
+  margin-top:.28rem;
   font-size:.72rem;color:var(--accent-1);text-decoration:none;font-weight:500;
+  line-height:1;
 }
 .auth-forgot:hover{text-decoration:underline;}
 

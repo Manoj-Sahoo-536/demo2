@@ -5,7 +5,7 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
 /* ═══════════════════════════════════════════════════════
-   RouteX — Premium 3D Scene
+   Guardian — Premium 3D Scene
    ═══════════════════════════════════════════════════════ */
 
 const canvas = document.querySelector('canvas#webgl');
