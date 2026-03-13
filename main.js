@@ -1010,13 +1010,20 @@ animate();
     truck.classList.remove('driving');
   }
 
-  /* ── Trigger: all "Get Started" buttons ── */
+  /* ── Trigger: all "Get Started" buttons ── redirect to Guardian app ── */
+  const GUARDIAN_URL = 'http://localhost:5177/login';
+
   // Nav Get Started button
   const getStartedBtn = document.getElementById('getStartedBtn');
-  if (getStartedBtn) getStartedBtn.addEventListener('click', openModal);
-  // CTA Get Started button (also named ctaBtn)
+  if (getStartedBtn) getStartedBtn.addEventListener('click', () => {
+    window.location.href = GUARDIAN_URL;
+  });
+
+  // CTA Get Started button (truck button in hero section)
   const ctaBtn = document.getElementById('ctaBtn');
-  if (ctaBtn) ctaBtn.addEventListener('click', openModal);
+  if (ctaBtn) ctaBtn.addEventListener('click', () => {
+    window.location.href = GUARDIAN_URL;
+  });
 
   /* ── Close: button or backdrop ── */
   if (closeBtn)  closeBtn.addEventListener('click', closeModal);
