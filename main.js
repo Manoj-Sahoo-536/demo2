@@ -480,17 +480,17 @@ let targetThemeValue = 1;
 const darkColors = {
   bg: new THREE.Color('#080c18'),
   fog: new THREE.Color('#0a1020'),
-  hemiSky: new THREE.Color(0x1a2b54),
+  hemiSky: new THREE.Color(0x2d1b4e),
   hemiGround: new THREE.Color(0x050a14),
-  sun: new THREE.Color(0x4a7ae8),
-  fill: new THREE.Color(0xf59e0b),
-  ground: new THREE.Color(0x3a4a58),
+  sun: new THREE.Color(0x38bdf8),
+  fill: new THREE.Color(0x00c1ff),
+  ground: new THREE.Color(0x2a2a3a),
   trunk: new THREE.Color(0x1a1b24),
-  leaf0: new THREE.Color(0x0a201a),
-  leaf1: new THREE.Color(0x081a12),
-  leaf2: new THREE.Color(0x0c2a26),
-  lampEmissive: new THREE.Color(0x4488ff),
-  particles: new THREE.Color(0x4488ff),
+  leaf0: new THREE.Color(0x1a1020),
+  leaf1: new THREE.Color(0x120a18),
+  leaf2: new THREE.Color(0x1a1420),
+  lampEmissive: new THREE.Color(0x00c1ff),
+  particles: new THREE.Color(0x00c1ff),
   intensitySun: 1.6,
   intensityHemi: 0.45,
   intensityLampMin: 2.5,
@@ -632,3 +632,150 @@ function animate() {
 }
 
 animate();
+
+/* ═══════════════════════════════════════════════════════
+   Moving Warp Grid Canvas — mouse-reactive distortion
+   ═══════════════════════════════════════════════════════ */
+(function() {
+  const cvs = document.getElementById('heroGridCanvas');
+  if (!cvs) return;
+  const ctx = cvs.getContext('2d');
+
+  let W, H, mouseX = -9999, mouseY = -9999;
+  const CELL = 48;          // grid spacing px
+  const WARP = 28;          // max warp radius px
+  const WARP_RADIUS = 180;  // influence radius px
+
+  function resize() {
+    const rect = cvs.parentElement.getBoundingClientRect();
+    W = cvs.width  = rect.width  || window.innerWidth;
+    H = cvs.height = rect.height || window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // Track mouse over the hero section
+  const heroEl = document.getElementById('heroSec') || document.querySelector('.hero-sec');
+  if (heroEl) {
+    heroEl.addEventListener('mousemove', e => {
+      const r = heroEl.getBoundingClientRect();
+      mouseX = e.clientX - r.left;
+      mouseY = e.clientY - r.top;
+    });
+    heroEl.addEventListener('mouseleave', () => { mouseX = -9999; mouseY = -9999; });
+  }
+
+  let t = 0;
+  function drawGrid() {
+    ctx.clearRect(0, 0, W, H);
+    t += 0.006; // slow drift speed
+
+    // Pick colour from CSS variable (cyan in both modes)
+    const isDark = document.body.classList.contains('dark-mode');
+    const lineColor = isDark ? 'rgba(0,193,255,0.13)' : 'rgba(0,193,255,0.18)';
+    ctx.strokeStyle = lineColor;
+    ctx.lineWidth = 0.8;
+
+    // Compute cols and rows
+    const cols = Math.ceil(W / CELL) + 2;
+    const rows = Math.ceil(H / CELL) + 2;
+
+    // Draw horizontal lines
+    for (let r = 0; r < rows; r++) {
+      ctx.beginPath();
+      for (let c = 0; c < cols; c++) {
+        let gx = (c - 1) * CELL;
+        let gy = (r - 1) * CELL;
+
+        // Slow ambient wave
+        const wave = Math.sin(c * 0.4 + t) * 3 + Math.cos(r * 0.3 + t * 0.7) * 2;
+        gy += wave;
+
+        // Mouse warp
+        const dx = gx - mouseX, dy = gy - mouseY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < WARP_RADIUS) {
+          const factor = (1 - dist / WARP_RADIUS) * WARP;
+          gy -= factor * (dy / (dist || 1));
+          gx -= factor * (dx / (dist || 1)) * 0.4;
+        }
+        if (c === 0) ctx.moveTo(gx, gy); else ctx.lineTo(gx, gy);
+      }
+      ctx.stroke();
+    }
+
+    // Draw vertical lines
+    for (let c = 0; c < cols; c++) {
+      ctx.beginPath();
+      for (let r = 0; r < rows; r++) {
+        let gx = (c - 1) * CELL;
+        let gy = (r - 1) * CELL;
+
+        const wave = Math.sin(r * 0.4 + t) * 3 + Math.cos(c * 0.3 + t * 0.7) * 2;
+        gx += wave;
+
+        const dx = gx - mouseX, dy = gy - mouseY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < WARP_RADIUS) {
+          const factor = (1 - dist / WARP_RADIUS) * WARP;
+          gx -= factor * (dx / (dist || 1));
+          gy -= factor * (dy / (dist || 1)) * 0.4;
+        }
+        if (r === 0) ctx.moveTo(gx, gy); else ctx.lineTo(gx, gy);
+      }
+      ctx.stroke();
+    }
+
+    requestAnimationFrame(drawGrid);
+  }
+  drawGrid();
+})();
+
+/* ═══════════════════════════════════════════════════════
+   Hero Stats Count-up Animation
+   ═══════════════════════════════════════════════════════ */
+(function() {
+  const items = document.querySelectorAll('#heroStats .hs-item[data-final]');
+  if (!items.length) return;
+
+  function easeOutExpo(t) {
+    return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+  }
+
+  function animateStat(el) {
+    const final   = parseFloat(el.dataset.final);
+    const decimals = parseInt(el.dataset.decimals || '0', 10);
+    const numEl   = el.querySelector('.hs-num');
+    if (!numEl) return;
+
+    const duration = 1800; // ms
+    const start    = performance.now();
+
+    function tick(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const val = final * easeOutExpo(progress);
+
+      // Format with comma-thousands for large numbers
+      const formatted = val >= 1000
+        ? Math.round(val).toLocaleString('en-US')
+        : val.toFixed(decimals);
+      numEl.textContent = formatted;
+
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // Trigger on intersection
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        animateStat(e.target);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.4 });
+
+  items.forEach(el => obs.observe(el));
+})();
