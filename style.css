@@ -983,8 +983,9 @@ body.dark-mode .features-page{
   backdrop-filter:blur(32px) saturate(1.8);
   -webkit-backdrop-filter:blur(32px) saturate(1.8);
   box-shadow:0 8px 32px rgba(0,193,255,0.06),inset 0 1px 0 rgba(255,255,255,0.8);
-  transition:transform var(--t-fast) var(--ease),box-shadow var(--t-fast) var(--ease);
+  transition:all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position:relative;overflow:hidden;
+  cursor:pointer;
 }
 body.dark-mode .fp-pipe-step{
   background:rgba(15,23,42,0.55);
@@ -996,33 +997,78 @@ body.dark-mode .fp-pipe-step{
   content:'';position:absolute;inset:0;
   background:linear-gradient(135deg,rgba(255,255,255,0.12) 0%,transparent 60%);
   pointer-events:none;border-radius:inherit;
+  opacity:1;
+  transition:opacity 0.4s ease;
+}
+/* Animated border glow on hover */
+.fp-pipe-step::after{
+  content:'';position:absolute;inset:-1px;
+  background:linear-gradient(135deg,var(--accent-1),var(--accent-2),var(--cyan),var(--accent-1));
+  background-size:300% 300%;
+  border-radius:var(--radius);
+  opacity:0;
+  z-index:-1;
+  transition:opacity 0.4s ease;
+  animation:gradientRotate 4s ease infinite;
+}
+@keyframes gradientRotate{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
 }
 .fp-pipe-step:hover{
-  transform:translateY(-5px);
-  box-shadow:0 16px 48px rgba(0,193,255,0.12),inset 0 1px 0 rgba(255,255,255,0.8);
+  transform:translateY(-10px) scale(1.03);
+  box-shadow:0 24px 48px rgba(0,193,255,0.12),0 0 0 1px rgba(0,193,255,0.2),inset 0 1px 0 rgba(255,255,255,0.9);
+  border-color:rgba(0,193,255,0.2);
+  background:rgba(255,255,255,0.5);
+}
+.fp-pipe-step:hover::before{
+  opacity:0.3;
+}
+.fp-pipe-step:hover::after{
+  opacity:0.25;
 }
 body.dark-mode .fp-pipe-step:hover{
-  box-shadow:0 16px 48px rgba(0,193,255,0.15),inset 0 1px 0 rgba(255,255,255,0.06);
+  box-shadow:0 24px 48px rgba(0,193,255,0.18),0 0 0 1px rgba(0,193,255,0.25),inset 0 1px 0 rgba(255,255,255,0.08);
+  border-color:rgba(0,193,255,0.25);
+  background:rgba(15,23,42,0.6);
 }
 .fp-pipe-step--highlight{
-  border-color:rgba(0,193,255,0.35);
-  background:rgba(0,193,255,0.06);
-  box-shadow:0 8px 32px rgba(0,193,255,0.1),inset 0 1px 0 rgba(255,255,255,0.6);
+  border-color:rgba(0,193,255,0.02);
+  background:rgba(0,193,255,0.002);
+  box-shadow:0 8px 32px rgba(0,193,255,0.005),inset 0 1px 0 rgba(255,255,255,0.6);
+}
+.fp-pipe-step--highlight:hover{
+  background:rgba(0,193,255,0.004);
+  border-color:rgba(0,193,255,0.04);
 }
 body.dark-mode .fp-pipe-step--highlight{
-  background:rgba(0,193,255,0.08);
-  border-color:rgba(0,193,255,0.25);
-  box-shadow:0 8px 32px rgba(0,193,255,0.15);
+  background:rgba(0,193,255,0.004);
+  border-color:rgba(0,193,255,0.02);
+  box-shadow:0 8px 32px rgba(0,193,255,0.01);
+}
+body.dark-mode .fp-pipe-step--highlight:hover{
+  background:rgba(0,193,255,0.006);
+  border-color:rgba(0,193,255,0.03);
 }
 .fp-pipe-num{
   font-family:var(--font-display);font-size:2rem;font-weight:700;
   background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   line-height:1;margin-bottom:.7rem;
+  transition:transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display:inline-block;
+}
+.fp-pipe-step:hover .fp-pipe-num{
+  transform:scale(1.1) translateY(-2px);
 }
 .fp-pipe-title{
   font-family:var(--font-display);font-size:.95rem;font-weight:700;
   color:var(--text-primary);margin-bottom:.45rem;
+  transition:color 0.3s ease;
+}
+.fp-pipe-step:hover .fp-pipe-title{
+  color:var(--accent-1);
 }
 .fp-pipe-desc{
   font-size:.795rem;line-height:1.68;color:var(--text-secondary);
@@ -1035,6 +1081,13 @@ body.dark-mode .fp-pipe-step--highlight{
   background:rgba(0,193,255,0.07);
   border:1px solid rgba(0,193,255,0.15);
   display:inline-block;
+  transition:all 0.3s ease;
+}
+.fp-pipe-step:hover .fp-pipe-tag{
+  background:rgba(0,193,255,0.12);
+  border-color:rgba(0,193,255,0.3);
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(0,193,255,0.2);
 }
 .fp-pipe-arrow{
   display:flex;align-items:center;
