@@ -44,6 +44,9 @@
 
     <!-- ━━ HERO ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
     <section class="hero-sec">
+      <!-- corner glow orbs (TL+BR via ::after, TR+BL via divs) -->
+      <div class="hero-orb-tr" aria-hidden="true"></div>
+      <div class="hero-orb-bl" aria-hidden="true"></div>
       <div class="hero-inner">
         <div class="hero-badge">
           <span class="hero-badge-dot"></span>
@@ -144,7 +147,214 @@
     </section>
 
     <div class="spacer"></div>
+
+    <!-- ━━ FEATURES PAGE — INNOVATE X5 ━━━━━━━━━━━━━━━━━━ -->
+    <section class="features-page" id="featuresPage">
+      <!-- 4-corner glow orbs -->
+      <div class="fp-blob-2" aria-hidden="true"></div>
+      <div class="fp-blob-3" aria-hidden="true"></div>
+      <div class="fp-blob-4" aria-hidden="true"></div>
+
+      <!-- ── Pipeline Architecture ── -->
+      <div class="fp-arch-section appear" id="fpArch">
+        <div class="fp-arch-label">
+          <span class="fp-section-tag">● 6-Layer Pipeline</span>
+          <h3 class="fp-innovations-title">Multimodal Two-Tower Architecture</h3>
+        </div>
+        <div class="fp-pipeline">
+          <div class="fp-pipe-step">
+            <div class="fp-pipe-num">01</div>
+            <div class="fp-pipe-body">
+              <div class="fp-pipe-title">Data Ingestion</div>
+              <div class="fp-pipe-desc">DataCo 180K+ records + synthetic weather/news + carrier history. Probabilistic chaos injection: 85% delay, 15% on-time to prevent shortcut overfitting.</div>
+              <div class="fp-pipe-tag">293K+ rows → 880K training rows</div>
+            </div>
+          </div>
+          <div class="fp-pipe-arrow">→</div>
+          <div class="fp-pipe-step">
+            <div class="fp-pipe-num">02</div>
+            <div class="fp-pipe-body">
+              <div class="fp-pipe-title">Two-Tower Extraction</div>
+              <div class="fp-pipe-desc">Tower A: XGBoost on 16 tabular features (carrier reliability 88%, weather severity 82%, route delay rate 76%). Tower B: FinBERT on alert text → 3 numeric risk scores.</div>
+              <div class="fp-pipe-tag">Tabular + NLP signals fused</div>
+            </div>
+          </div>
+          <div class="fp-pipe-arrow">→</div>
+          <div class="fp-pipe-step">
+            <div class="fp-pipe-num">03</div>
+            <div class="fp-pipe-body">
+              <div class="fp-pipe-title">MLP Fusion Head</div>
+              <div class="fp-pipe-desc">3-layer PyTorch MLP (128→64→1) with MC Dropout concatenates both tower outputs. Outputs probability 0.0–1.0 representing SLA miss likelihood with uncertainty bounds.</div>
+              <div class="fp-pipe-tag">risk_score ± neural_uncertainty</div>
+            </div>
+          </div>
+          <div class="fp-pipe-arrow">→</div>
+          <div class="fp-pipe-step fp-pipe-step--highlight">
+            <div class="fp-pipe-num">04</div>
+            <div class="fp-pipe-body">
+              <div class="fp-pipe-title">Prescriptive Agent</div>
+              <div class="fp-pipe-desc">Tiered threshold gate: Critical ships intervene at >45%, Priority at >65%, Standard at >80%. DiCE counterfactuals + Gemini 1.5 Flash select the optimal action.</div>
+              <div class="fp-pipe-tag">Action + cost + CO₂ + confidence (JSON)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Intervention Actions Table ── -->
+      <div class="fp-table-section appear" id="fpTable">
+        <div class="fp-arch-label">
+          <span class="fp-section-tag">● Prescriptive Engine</span>
+          <h3 class="fp-innovations-title">Intervention Actions & Estimated Savings</h3>
+        </div>
+        <div class="fp-table-wrap">
+          <div class="fp-table-row fp-table-head">
+            <span>Trigger Condition</span>
+            <span>Action</span>
+            <span>Est. Cost</span>
+            <span>Net Saving</span>
+          </div>
+          <div class="fp-table-row" data-severity="red">
+            <span><span class="fp-trigger-dot red"></span>Weather severity &gt;7 at destination</span>
+            <span>Reroute via Air Freight</span>
+            <span class="fp-cost">₹45,000</span>
+            <span class="fp-saving green">₹73,000</span>
+          </div>
+          <div class="fp-table-row" data-severity="amber">
+            <span><span class="fp-trigger-dot amber"></span>Carrier reliability &lt;70% on route</span>
+            <span>Assign Alternative Carrier</span>
+            <span class="fp-cost">₹12,000</span>
+            <span class="fp-saving green">₹68,000</span>
+          </div>
+          <div class="fp-table-row" data-severity="amber">
+            <span><span class="fp-trigger-dot amber"></span>Risk at tier threshold, low urgency</span>
+            <span>Send Pre-Alert to Customer</span>
+            <span class="fp-cost">₹0</span>
+            <span class="fp-saving green">₹30,000</span>
+          </div>
+          <div class="fp-table-row" data-severity="red">
+            <span><span class="fp-trigger-dot red"></span>Port strike probability &gt;60%</span>
+            <span>Reroute via Road/Rail</span>
+            <span class="fp-cost">₹28,000</span>
+            <span class="fp-saving green">₹85,000</span>
+          </div>
+        </div>
+      </div>
+
+    </section><!-- /features-page -->
+
+    <div class="spacer"></div>
   </div><!-- /scroll-wrap -->
+
+  <!-- ━━ FOOTER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <footer class="site-footer" id="siteFooter">
+    <!-- 4-corner orbs -->
+    <div class="footer-glow"></div>
+    <div class="footer-blob-tl" aria-hidden="true"></div>
+    <div class="footer-blob-br" aria-hidden="true"></div>
+
+    <!-- ── Top Section ── -->
+    <div class="footer-top">
+
+      <!-- Brand Column -->
+      <div class="footer-brand-col">
+        <div class="footer-logo">
+          <div class="footer-logo-icon">⬡</div>
+          <span>RouteX</span>
+        </div>
+        <p class="footer-tagline">The world's smartest freight intelligence platform. Powered by AI. Delivered on time.</p>
+        <!-- Social Icons -->
+        <div class="footer-socials">
+          <a href="#" class="footer-social" aria-label="Twitter / X">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.631 5.905-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="#" class="footer-social" aria-label="LinkedIn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+          <a href="#" class="footer-social" aria-label="GitHub">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          </a>
+          <a href="#" class="footer-social" aria-label="YouTube">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Nav Columns -->
+      <div class="footer-nav-cols">
+
+        <div class="footer-col">
+          <h5 class="footer-col-head">Platform</h5>
+          <ul class="footer-links">
+            <li><a href="#">AI Route Engine</a></li>
+            <li><a href="#">Risk Detection</a></li>
+            <li><a href="#">Live Tracking</a></li>
+            <li><a href="#">Disruption Recovery</a></li>
+            <li><a href="#">Port Congestion</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5 class="footer-col-head">Solutions</h5>
+          <ul class="footer-links">
+            <li><a href="#">Enterprise Freight</a></li>
+            <li><a href="#">E-Commerce Logistics</a></li>
+            <li><a href="#">Pharmaceutical</a></li>
+            <li><a href="#">Cold Chain</a></li>
+            <li><a href="#">Cross-Border</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5 class="footer-col-head">Company</h5>
+          <ul class="footer-links">
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Careers <span class="footer-badge-new">3 open</span></a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Press</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="footer-col footer-col--news">
+          <h5 class="footer-col-head">Stay Ahead of Disruptions</h5>
+          <p class="footer-news-desc">Get weekly logistics AI insights and early platform updates.</p>
+          <div class="footer-newsletter">
+            <input type="email" id="footerEmail" class="footer-email-input" placeholder="you@company.com" autocomplete="email"/>
+            <button class="footer-subscribe-btn" id="footerSubscribeBtn">Subscribe</button>
+          </div>
+          <p class="footer-news-note">No spam. Unsubscribe anytime.</p>
+        </div>
+
+      </div>
+    </div><!-- /footer-top -->
+
+    <!-- ── Divider ── -->
+    <div class="footer-divider"></div>
+
+    <!-- ── Bottom Bar ── -->
+    <div class="footer-bottom">
+      <div class="footer-bottom-left">
+        <span class="footer-copy">© 2026 RouteX Technologies Pvt. Ltd. All rights reserved.</span>
+      </div>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy Policy</a>
+        <span class="footer-dot">·</span>
+        <a href="#">Terms of Service</a>
+        <span class="footer-dot">·</span>
+        <a href="#">Cookie Settings</a>
+        <span class="footer-dot">·</span>
+        <a href="#">Security</a>
+      </div>
+      <div class="footer-bottom-right">
+        <span class="footer-status">
+          <span class="footer-status-dot"></span>
+          All systems operational
+        </span>
+      </div>
+    </div>
+
+  </footer>
 
   <script type="module" src="/main.js"></script>
   <script>
