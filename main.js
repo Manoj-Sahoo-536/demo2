@@ -59,7 +59,7 @@ const curve = new THREE.CatmullRomCurve3([
   new THREE.Vector3(-3.5, 0,   9.5),
   new THREE.Vector3(-1.5, 0,  12.5),
   new THREE.Vector3( 2,   0,  15),
-]);
+], false, 'catmullrom', 0.3);
 
 // ── Road Texture (Canvas Baked — High Quality) ──────
 function makeRoadTex() {
@@ -234,10 +234,95 @@ function addTree(x, z, type = 0, sc = 1) {
   [-11, -12, 1, 0.8], [11, -11, 0, 0.7], [-11, 12, 2, 0.9], [11, 11, 1, 0.8],
 ].forEach(([x, z, t, s]) => addTree(x, z, t, s));
 
+// ── Buildings ────────────────────────────────────────
+const buildingMats = [
+  new THREE.MeshStandardMaterial({ color: 0x8a9ba8, roughness: 0.75, metalness: 0.15 }),
+  new THREE.MeshStandardMaterial({ color: 0x6b7a88, roughness: 0.78, metalness: 0.12 }),
+  new THREE.MeshStandardMaterial({ color: 0x9aa5b0, roughness: 0.72, metalness: 0.18 }),
+];
+const roofMat = new THREE.MeshStandardMaterial({ color: 0x4a3a2a, roughness: 0.85 });
+const windowMat = new THREE.MeshStandardMaterial({ 
+  color: 0xffcc66, 
+  roughness: 0.05, 
+  metalness: 0.2,
+  emissive: 0xffaa33,
+  emissiveIntensity: 0.0
+});
+
+function addBuilding(x, z, w, h, d, matIdx = 0) {
+  const g = new THREE.Group();
+  
+  // Main building body
+  const body = new THREE.Mesh(
+    new THREE.BoxGeometry(w, h, d),
+    buildingMats[matIdx]
+  );
+  body.position.y = h / 2;
+  body.castShadow = true;
+  body.receiveShadow = true;
+  g.add(body);
+  
+  // Roof
+  const roof = new THREE.Mesh(
+    new THREE.BoxGeometry(w + 0.2, 0.3, d + 0.2),
+    roofMat
+  );
+  roof.position.y = h + 0.15;
+  roof.castShadow = true;
+  g.add(roof);
+  
+  // Windows
+  const windowsPerRow = Math.floor(w / 0.8);
+  const floors = Math.floor(h / 1.2);
+  
+  for (let f = 0; f < floors; f++) {
+    for (let i = 0; i < windowsPerRow; i++) {
+      // Front windows
+      const win1 = new THREE.Mesh(
+        new THREE.BoxGeometry(0.4, 0.6, 0.05),
+        windowMat
+      );
+      win1.position.set(
+        -w/2 + 0.4 + i * 0.8,
+        0.6 + f * 1.2,
+        d/2 + 0.03
+      );
+      g.add(win1);
+      
+      // Back windows
+      const win2 = new THREE.Mesh(
+        new THREE.BoxGeometry(0.4, 0.6, 0.05),
+        windowMat
+      );
+      win2.position.set(
+        -w/2 + 0.4 + i * 0.8,
+        0.6 + f * 1.2,
+        -d/2 - 0.03
+      );
+      g.add(win2);
+    }
+  }
+  
+  g.position.set(x, -0.18, z);
+  scene.add(g);
+}
+
+// Building placements
+[
+  [-10, -6, 2.5, 3.5, 2.0, 0],
+  [-9, 2, 2.0, 4.2, 1.8, 1],
+  [10, -4, 2.8, 3.8, 2.2, 2],
+  [11, 4, 2.2, 5.0, 2.0, 0],
+  [-12, -11, 1.8, 2.8, 1.5, 1],
+  [12, -10, 2.0, 3.2, 1.8, 2],
+  [-11, 10, 2.4, 4.5, 2.0, 0],
+  [12, 9, 2.6, 3.6, 2.2, 1],
+].forEach(([x, z, w, h, d, m]) => addBuilding(x, z, w, h, d, m));
+
 // ── Street Lamps ────────────────────────────────────
 const poleM = new THREE.MeshStandardMaterial({ color: 0x7a8a9a, roughness: 0.35, metalness: 0.8 });
 const lampGlowM = new THREE.MeshStandardMaterial({
-  color: 0xfffce0, emissive: 0xfffce0, emissiveIntensity: 0.0
+  color: 0xffcc66, emissive: 0xffaa33, emissiveIntensity: 0.0
 });
 
 for (let li = 0; li <= 8; li++) {
@@ -246,18 +331,19 @@ for (let li = 0; li <= 8; li++) {
   const lperp = new THREE.Vector3(-ltn.z, 0, ltn.x);
 
   [-1, 1].forEach(side => {
-    const ox = lp.x + lperp.x * (RHW + 0.55) * side;
-    const oz = lp.z + lperp.z * (RHW + 0.55) * side;
+    const ox = lp.x + lperp.x * (RHW + 0.65) * side;
+    const oz = lp.z + lperp.z * (RHW + 0.65) * side;
 
     const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.07, 3.8, 8), poleM);
-    pole.position.set(ox, 1.9 - 0.18, oz); pole.castShadow = true; scene.add(pole);
+    pole.position.set(ox, 1.72, oz); pole.castShadow = true; scene.add(pole);
 
+    const armY = 3.52;
     const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.55, 6), poleM);
-    arm.position.set(ox - lperp.x * 0.22 * side, 3.7, oz - lperp.z * 0.22 * side);
+    arm.position.set(ox - lperp.x * 0.22 * side, armY, oz - lperp.z * 0.22 * side);
     arm.rotation.z = Math.PI / 2; scene.add(arm);
 
     const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.12, 12, 8), lampGlowM);
-    bulb.position.set(ox - lperp.x * 0.48 * side, 3.72, oz - lperp.z * 0.48 * side);
+    bulb.position.set(ox - lperp.x * 0.48 * side, armY - 0.12, oz - lperp.z * 0.48 * side);
     scene.add(bulb);
   });
 }
@@ -489,7 +575,7 @@ const darkColors = {
   leaf0: new THREE.Color(0x1a1020),
   leaf1: new THREE.Color(0x120a18),
   leaf2: new THREE.Color(0x1a1420),
-  lampEmissive: new THREE.Color(0x00c1ff),
+  lampEmissive: new THREE.Color(0xffaa33),
   particles: new THREE.Color(0x00c1ff),
   intensitySun: 1.6,
   intensityHemi: 0.45,
@@ -551,7 +637,7 @@ function animate() {
   const time  = clock.getElapsedTime();
 
   // Smooth scroll interpolation
-  sp = THREE.MathUtils.lerp(sp, scrollProgress, 0.06);
+  sp = THREE.MathUtils.lerp(sp, scrollProgress, 0.04);
 
   const isDriving = sp > 0.01 && sp < 0.99;
 
@@ -592,23 +678,26 @@ function animate() {
     leafMs[1].color.lerpColors(darkColors.leaf1, lightColors.leaf1, themeValue);
     leafMs[2].color.lerpColors(darkColors.leaf2, lightColors.leaf2, themeValue);
 
+    // Building windows: glow in dark mode
+    const windowGlow = THREE.MathUtils.lerp(2.2, 0.0, themeValue);
+    windowMat.emissiveIntensity = windowGlow;
+
     partMat.color.lerpColors(darkColors.particles, lightColors.particles, themeValue);
 
     bloomPass.strength  = THREE.MathUtils.lerp(darkBloom.strength, lightBloom.strength, themeValue);
     bloomPass.threshold = THREE.MathUtils.lerp(darkBloom.threshold, lightBloom.threshold, themeValue);
 
     // Vehicle lights: only glow in dark mode (themeValue 0=dark, 1=light)
-    const lightIntensity = THREE.MathUtils.lerp(0.9, 0.0, themeValue);
+    const lightIntensity = THREE.MathUtils.lerp(2.8, 0.0, themeValue);
     mHL.emissiveIntensity  = lightIntensity;
-    mTL.emissiveIntensity  = lightIntensity;
-    mAmb.emissiveIntensity = lightIntensity * 0.65;
+    mTL.emissiveIntensity  = lightIntensity * 0.7;
+    mAmb.emissiveIntensity = lightIntensity * 0.5;
   }
 
-  // Lamp glow pulsing
+  // Lamp glow - constant in dark mode, off in light mode
   const currentMin  = THREE.MathUtils.lerp(darkColors.intensityLampMin, lightColors.intensityLampMin, themeValue);
-  const currentWave = THREE.MathUtils.lerp(darkColors.intensityLampWave, lightColors.intensityLampWave, themeValue);
   lampGlowM.emissive.lerpColors(darkColors.lampEmissive, lightColors.lampEmissive, themeValue);
-  lampGlowM.emissiveIntensity = currentMin + currentWave * Math.sin(time * 2.5);
+  lampGlowM.emissiveIntensity = currentMin;
 
   // LED status
   if (scrollProgress >= 0.88) {
