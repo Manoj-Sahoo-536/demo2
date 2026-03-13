@@ -1819,6 +1819,71 @@ body.dark-mode .footer-blob-br{
 }
 
 /* ═══════════════════════════════════════════════════════
+   Nav Get Started Button with Truck Icon
+   ═══════════════════════════════════════════════════════ */
+.nav-get-started-btn{
+  position:relative;
+  display:inline-flex;align-items:center;gap:.6rem;
+  padding:.55rem 1.4rem;
+  background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+  color:#fff;font-size:.85rem;font-weight:700;
+  border:none;border-radius:var(--radius-pill);
+  cursor:pointer;letter-spacing:.02em;
+  box-shadow:0 4px 20px rgba(0,193,255,0.35);
+  transition:all var(--t-fast) var(--ease-spring);
+  overflow:hidden;
+}
+.nav-get-started-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 30%,rgba(255,255,255,0.2) 50%,transparent 70%);
+  transform:translateX(-100%);
+  transition:transform 0.6s var(--ease);
+}
+.nav-get-started-btn:hover{
+  transform:translateY(-2px) scale(1.03);
+  box-shadow:0 8px 32px rgba(0,193,255,0.5);
+}
+.nav-get-started-btn:hover::before{transform:translateX(100%);}
+.nav-get-started-btn:active{transform:translateY(0) scale(0.98);}
+
+.ngs-truck-icon{
+  width:24px;height:24px;flex-shrink:0;
+  transition:transform var(--t-md) var(--ease);
+}
+.nav-get-started-btn:hover .ngs-truck-icon{
+  animation:truckBounce 0.5s ease infinite;
+}
+@keyframes truckBounce{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-2px);}
+}
+
+.ngs-label{
+  font-size:.85rem;font-weight:700;letter-spacing:.02em;
+  position:relative;z-index:1;
+}
+.ngs-arrow{
+  font-size:1rem;font-weight:700;
+  position:relative;z-index:1;
+  transition:transform var(--t-fast) var(--ease);
+}
+.nav-get-started-btn:hover .ngs-arrow{
+  animation:arrowSlide 0.6s ease infinite;
+}
+@keyframes arrowSlide{
+  0%,100%{transform:translateX(0);}
+  50%{transform:translateX(4px);}
+}
+
+/* Dark mode adjustments */
+body.dark-mode .nav-get-started-btn{
+  box-shadow:0 4px 20px rgba(0,193,255,0.4);
+}
+body.dark-mode .nav-get-started-btn:hover{
+  box-shadow:0 8px 32px rgba(0,193,255,0.6);
+}
+
+/* ═══════════════════════════════════════════════════════
    FEATURE 2 — Industrial Demo CTA Button
    ═══════════════════════════════════════════════════════ */
 .nav-demo-btn{
