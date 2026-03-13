@@ -779,3 +779,76 @@ animate();
 
   items.forEach(el => obs.observe(el));
 })();
+
+/* ═══════════════════════════════════════════════════════
+   Get Started Section — Warp Grid Canvas
+   ═══════════════════════════════════════════════════════ */
+(function() {
+  const cvs = document.getElementById('gsGridCanvas');
+  if (!cvs) return;
+  const ctx = cvs.getContext('2d');
+  let W, H, mouseX = -9999, mouseY = -9999;
+  const CELL = 52, WARP = 24, WARP_RADIUS = 160;
+
+  function resize() {
+    const rect = cvs.parentElement.getBoundingClientRect();
+    W = cvs.width  = rect.width  || window.innerWidth;
+    H = cvs.height = rect.height || 600;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const parent = cvs.parentElement;
+  parent.addEventListener('mousemove', e => {
+    const r = parent.getBoundingClientRect();
+    mouseX = e.clientX - r.left;
+    mouseY = e.clientY - r.top;
+  });
+  parent.addEventListener('mouseleave', () => { mouseX = -9999; mouseY = -9999; });
+
+  let t = 0;
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    t += 0.005;
+    const isDark = document.body.classList.contains('dark-mode');
+    ctx.strokeStyle = isDark ? 'rgba(0,193,255,0.11)' : 'rgba(0,193,255,0.16)';
+    ctx.lineWidth = 0.75;
+    const cols = Math.ceil(W / CELL) + 2;
+    const rows = Math.ceil(H / CELL) + 2;
+
+    for (let r = 0; r < rows; r++) {
+      ctx.beginPath();
+      for (let c = 0; c < cols; c++) {
+        let gx = (c - 1) * CELL;
+        let gy = (r - 1) * CELL + Math.sin(c * 0.35 + t) * 3;
+        const dx = gx - mouseX, dy = gy - mouseY;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < WARP_RADIUS) {
+          const f = (1 - dist/WARP_RADIUS) * WARP;
+          gy -= f * (dy / (dist||1));
+          gx -= f * (dx / (dist||1)) * 0.4;
+        }
+        c === 0 ? ctx.moveTo(gx, gy) : ctx.lineTo(gx, gy);
+      }
+      ctx.stroke();
+    }
+    for (let c = 0; c < cols; c++) {
+      ctx.beginPath();
+      for (let r = 0; r < rows; r++) {
+        let gx = (c - 1) * CELL + Math.sin(r * 0.35 + t) * 3;
+        let gy = (r - 1) * CELL;
+        const dx = gx - mouseX, dy = gy - mouseY;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < WARP_RADIUS) {
+          const f = (1 - dist/WARP_RADIUS) * WARP;
+          gx -= f * (dx / (dist||1));
+          gy -= f * (dy / (dist||1)) * 0.4;
+        }
+        r === 0 ? ctx.moveTo(gx, gy) : ctx.lineTo(gx, gy);
+      }
+      ctx.stroke();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
